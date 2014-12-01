@@ -1,0 +1,22 @@
+language: java
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+before_install:
+  - wget -nv https://gist.githubusercontent.com/Tommsy64/3d4fe382dfb309a00f39/raw/0fec6ec129db47217a494b62df4c6150418e8594/GetForgeVersion.sh && chmod +x ./GetForgeVersion.sh && ./GetForgeVersion.sh
+install:
+  - chmod +x ./gradlew && ./gradlew setupDecompWorkspace
+env:
+  matrix:
+    - FORGE_RELEASE=1.7.10-latest
+    - FORGE_RELEASE=1.7.10-recommended
+script:
+  - ./gradlew build
+cache:
+  directories:
+  - ~/.gradle
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+    
