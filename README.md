@@ -1,17 +1,15 @@
-#ProjectE
+ProjectE [![Build Status](https://travis-ci.org/Tommsy64/ProjectE.svg?branch=master)](https://travis-ci.org/Tommsy64/ProjectE)
+=============
 
-Repository for ProjectE, complete rewrite of EE2 for minecraft 1.7.10
+ProjectE is a complete rewrite of Equivlent Exchange 2 (EE2) for Minecraft 1.7.10 and up.
 
-Link to all versions of ProjectE: https://www.dropbox.com/sh/0re51mv4tp5l0xx/AAD9pmU4zOSQDSVgjVCtB5IJa
+The versions found under [releases](https://github.com/Tommsy64/ProjectE/releases) are the same as the original ProjectE with the exception of the unlocalized names. They have been changed back to the old ones prior to 0.2d-dev10.
+If you used any ProjectE older than 0.2d-dev10 and would like to update without losing any of your blocks/items, use these builds.
+
+## Copyright
 
 ProjectE is an open-source project. Do whatever you want with the code and assets.
 
 Feel free to use this in any modpack, public or private.
 
 If you have a bug to report, open an issue.
-
-#Dev Builds
-
-Dev builds can be highly broken/unstable, but contain the latest and greatest stuff.
-
-They can all be found here: https://www.dropbox.com/sh/shnzlhxvkukmd01/AACQp6QrYTcpM-BV_hTFG8I9a?dl=0
