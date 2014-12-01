@@ -17,7 +17,7 @@ public abstract class ItemPE extends Item
     @Override
     public Item setUnlocalizedName(String message)
     {
-        return super.setUnlocalizedName("pe_" + message);
+        return super.setUnlocalizedName("" + message);
     }
 
     public static double getEmc(ItemStack stack)

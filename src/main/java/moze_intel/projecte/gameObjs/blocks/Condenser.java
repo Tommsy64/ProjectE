@@ -24,7 +24,7 @@ public class Condenser extends AlchemicalChest implements ITileEntityProvider
 	public Condenser() 
 	{
 		super();
-		this.setBlockName("pe_condenser");
+		this.setBlockName("condenser");
 	}
 	
 	@Override
