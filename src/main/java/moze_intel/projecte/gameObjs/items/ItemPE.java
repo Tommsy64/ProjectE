@@ -20,7 +20,7 @@ public abstract class ItemPE extends Item
         return super.setUnlocalizedName("" + message);
     }
 
-    public static double getEmc(ItemStack stack)
+	public static double getEmc(ItemStack stack)
 	{
 		if (stack.stackTagCompound == null)
 		{
@@ -85,7 +85,7 @@ public abstract class ItemPE extends Item
 		return true;
 	}
 	
-	public void setTickCounter(ItemStack stack, byte count)
+	/*public void setTickCounter(ItemStack stack, byte count)
 	{
 		stack.stackTagCompound.setByte("TickCounter", count);
 	}
@@ -112,7 +112,7 @@ public abstract class ItemPE extends Item
 	public boolean isReady(ItemStack stack)
 	{
 		return getTickCount(stack) == 0;
-	}
+	}*/
 	
 	public String getTexture(String name)
 	{

@@ -3,10 +3,7 @@ package moze_intel.projecte.gameObjs.container.inventory;
 import moze_intel.projecte.emc.FuelMapper;
 import moze_intel.projecte.gameObjs.ObjHandler;
 import moze_intel.projecte.playerData.Transmutation;
-import moze_intel.projecte.utils.Comparators;
-import moze_intel.projecte.utils.Constants;
-import moze_intel.projecte.utils.NBTWhitelist;
-import moze_intel.projecte.utils.Utils;
+import moze_intel.projecte.utils.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -63,10 +60,10 @@ public class TransmuteTabletInventory implements IInventory
 			}
 			else
 			{
-                if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
-                {
-                    stack.stackTagCompound = null;
-                }
+				if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
+				{
+					stack.stackTagCompound = null;
+				}
 
 				Transmutation.addToKnowledge(player.getCommandSenderName(), stack);
 			}
@@ -118,12 +115,12 @@ public class TransmuteTabletInventory implements IInventory
 				return;
 			}
 
-            lockCopy = Utils.getNormalizedStack(inventory[LOCK_INDEX]);
+			lockCopy = Utils.getNormalizedStack(inventory[LOCK_INDEX]);
 
-            if (lockCopy.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(lockCopy))
-            {
-                lockCopy.setTagCompound(new NBTTagCompound());
-            }
+			if (lockCopy.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(lockCopy))
+			{
+				lockCopy.setTagCompound(new NBTTagCompound());
+			}
 			
 			Iterator<ItemStack> iter = knowledge.iterator();
 			
@@ -137,27 +134,27 @@ public class TransmuteTabletInventory implements IInventory
 					continue;
 				}
 
-                if (Utils.basicAreStacksEqual(lockCopy, stack))
-                {
-                    iter.remove();
-                    continue;
-                }
+				if (Utils.basicAreStacksEqual(lockCopy, stack))
+				{
+					iter.remove();
+					continue;
+				}
 
-                String displayName = "";
+				String displayName = "";
 
-                try
-                {
-                    displayName = stack.getDisplayName();
-                }
-                catch (Exception e)
-                {
-                    continue;
-                }
+				try
+				{
+					displayName = stack.getDisplayName();
+				}
+				catch (Exception e)
+				{
+					continue;
+				}
 
-                if (filter.length() > 0 && !displayName.toLowerCase().contains(filter))
-                {
-                    iter.remove();
-                }
+				if (filter.length() > 0 && !displayName.toLowerCase().contains(filter))
+				{
+					iter.remove();
+				}
 			}
 		}
 		else
@@ -174,21 +171,21 @@ public class TransmuteTabletInventory implements IInventory
 					continue;
 				}
 
-                String displayName = "";
+				String displayName = "";
 
-                try
-                {
-                    displayName = stack.getDisplayName();
-                }
-                catch (Exception e)
-                {
-                    continue;
-                }
+				try
+				{
+					displayName = stack.getDisplayName();
+				}
+				catch (Exception e)
+				{
+					continue;
+				}
 
-                if (filter.length() > 0 && !displayName.toLowerCase().contains(filter))
-                {
-                    iter.remove();
-                }
+				if (filter.length() > 0 && !displayName.toLowerCase().contains(filter))
+				{
+					iter.remove();
+				}
 			}
 		}
 		
@@ -197,19 +194,19 @@ public class TransmuteTabletInventory implements IInventory
 		int matterCounter = 0;
 		int fuelCounter = 0;
 
-        if (lockCopy != null)
-        {
-            if (FuelMapper.isStackFuel(lockCopy))
-            {
-                inventory[FUEL_INDEXES[0]] = lockCopy;
-                fuelCounter++;
-            }
-            else
-            {
-                inventory[MATTER_INDEXES[0]] = lockCopy;
-                matterCounter++;
-            }
-        }
+		if (lockCopy != null)
+		{
+			if (FuelMapper.isStackFuel(lockCopy))
+			{
+				inventory[FUEL_INDEXES[0]] = lockCopy;
+				fuelCounter++;
+			}
+			else
+			{
+				inventory[MATTER_INDEXES[0]] = lockCopy;
+				matterCounter++;
+			}
+		}
 		
 		for (ItemStack stack : knowledge)
 		{
@@ -386,9 +383,17 @@ public class TransmuteTabletInventory implements IInventory
 	@Override
 	public void closeInventory() 
 	{
-		writeToNBT(player.getHeldItem().stackTagCompound);
-		
-		Transmutation.setStoredEmc(player.getCommandSenderName(), emc);
+		if (player != null && player.getHeldItem() != null)
+		{
+			writeToNBT(player.getHeldItem().stackTagCompound);
+			Transmutation.setStoredEmc(player.getCommandSenderName(), emc);
+		}
+		else
+		{
+			PELogger.logFatal("Failed to write NBT data for transmutation tablet!");
+			PELogger.logFatal("Player: " + player);
+			PELogger.logFatal("Please report this to the developer!");
+		}
 		
 		player = null;
 	}

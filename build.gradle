@@ -20,7 +20,7 @@ String forgeVersion = new File(projectDir.toString() + "/ForgeVersion").text
 
 apply plugin: 'forge'
 
-version = mcVersion + "-0.2d-dev10"
+version = mcVersion + "-0.2d-dev11"
 group = "java.moze_intel" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ProjectE"
 

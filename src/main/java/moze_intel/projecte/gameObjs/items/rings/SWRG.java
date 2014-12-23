@@ -3,7 +3,9 @@ package moze_intel.projecte.gameObjs.items.rings;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
-import moze_intel.projecte.events.PlayerChecksEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import moze_intel.projecte.handlers.PlayerChecks;
 import moze_intel.projecte.gameObjs.items.ItemPE;
 import moze_intel.projecte.utils.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -16,8 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class SWRG extends ItemPE implements IBauble
@@ -50,7 +50,7 @@ public class SWRG extends ItemPE implements IBauble
 		EntityPlayer player = (EntityPlayer) entity;
 		EntityPlayerMP playerMP = (EntityPlayerMP) entity;
 		
-		if (this.getEmc(stack) == 0 && !this.consumeFuel(player, stack, 64, false))
+		if (getEmc(stack) == 0 && !consumeFuel(player, stack, 64, false))
 		{
 			if (stack.getItemDamage() > 0)
 			{
@@ -69,7 +69,7 @@ public class SWRG extends ItemPE implements IBauble
 		{
 			enableFlight(playerMP);
 		}
-			
+
 		if (playerMP.capabilities.isFlying)
 		{
 			if (!isFlyingEnabled(stack))
@@ -106,7 +106,7 @@ public class SWRG extends ItemPE implements IBauble
 			toRemove = 0.64F;
 		}
 		
-		this.removeEmc(stack, toRemove);
+		removeEmc(stack, toRemove);
 	}
 	
 	@Override
@@ -134,13 +134,13 @@ public class SWRG extends ItemPE implements IBauble
 			
 			if (newMode > 1)
 			{
-				if (this.getEmc(stack) > 0)
+				if (getEmc(stack) > 0)
 				{
 					changeMode(player, stack, newMode);
 				}
 				else 
 				{
-					if (this.consumeFuel(player, stack, 64, false))
+					if (consumeFuel(player, stack, 64, false))
 					{
 						changeMode(player, stack, newMode);
 					}
@@ -156,7 +156,7 @@ public class SWRG extends ItemPE implements IBauble
 	
 	public void ToggleFlight(EntityPlayer player, ItemStack ring)
 	{
-		if (this.getEmc(ring) == 0 && !this.consumeFuel(player, ring, 64, false))
+		if (getEmc(ring) == 0 && !consumeFuel(player, ring, 64, false))
 		{
 			return;
 		}
@@ -188,7 +188,7 @@ public class SWRG extends ItemPE implements IBauble
 		if (!playerMP.capabilities.allowFlying)
 		{
 			Utils.setPlayerFlight(playerMP, true);
-			PlayerChecksEvent.addPlayerFlyChecks(playerMP);
+			PlayerChecks.addPlayerFlyChecks(playerMP);
 		}
 	}
 	
@@ -202,7 +202,7 @@ public class SWRG extends ItemPE implements IBauble
 		if (playerMP.capabilities.allowFlying)
 		{
 			Utils.setPlayerFlight(playerMP, false);
-			PlayerChecksEvent.removePlayerFlyChecks(playerMP);
+			PlayerChecks.removePlayerFlyChecks(playerMP);
 		}
 	}
 	
@@ -269,13 +269,13 @@ public class SWRG extends ItemPE implements IBauble
 	
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
-    {
-        return false;
-    }
+	{
+		return false;
+	}
 	
 	@SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int dmg)
-    {
+	public IIcon getIconFromDamage(int dmg)
+	{
 		if (dmg == 0)
 		{
 			return ringOff;
@@ -285,11 +285,11 @@ public class SWRG extends ItemPE implements IBauble
 		{
 			return ringOn[MathHelper.clamp_int(dmg - 1, 0, 2)];
 		}
-    }
+	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		ringOff = register.registerIcon(this.getTexture("rings", "swrg_off"));
 		ringOn = new IIcon[3];
@@ -301,14 +301,14 @@ public class SWRG extends ItemPE implements IBauble
 	}
 	
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public baubles.api.BaubleType getBaubleType(ItemStack itemstack)
 	{
 		return BaubleType.RING;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onWornTick(ItemStack stack, EntityLivingBase ent) 
 	{
 		if (ent.worldObj.isRemote || !(ent instanceof EntityPlayer))
@@ -324,7 +324,7 @@ public class SWRG extends ItemPE implements IBauble
 		EntityPlayer player = (EntityPlayer) ent;
 		EntityPlayerMP playerMP = (EntityPlayerMP) player;
 		
-		if (this.getEmc(stack) == 0 && !this.consumeFuel(player, stack, 64, false))
+		if (getEmc(stack) == 0 && !consumeFuel(player, stack, 64, false))
 		{
 			if (stack.getItemDamage() > 0)
 			{
@@ -380,15 +380,15 @@ public class SWRG extends ItemPE implements IBauble
 			toRemove = 0.64F;
 		}
 		
-		this.removeEmc(stack, toRemove);
+		removeEmc(stack, toRemove);
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onUnequipped(ItemStack itemstack, EntityLivingBase player) 
 	{
 		if (player.worldObj.isRemote || !(player instanceof EntityPlayer))
@@ -400,14 +400,14 @@ public class SWRG extends ItemPE implements IBauble
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;
