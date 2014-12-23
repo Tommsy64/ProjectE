@@ -3,6 +3,7 @@ package moze_intel.projecte.gameObjs.items.rings;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
+import moze_intel.projecte.handlers.PlayerTimers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,29 +32,22 @@ public class BodyStone extends RingToggle implements IBauble
 		
 		if (stack.getItemDamage() != 0)
 		{
-			double itemEmc = this.getEmc(stack);
+			double itemEmc = getEmc(stack);
 			
-			if (itemEmc < 64 && !this.consumeFuel(player, stack, 64, false))
+			if (itemEmc < 64 && !consumeFuel(player, stack, 64, false))
 			{
 				stack.setItemDamage(0);
 			}
-			else if (player.getFoodStats().needFood())
+			else
 			{
-				if (isReady(stack))
+				PlayerTimers.activateFeed(player);
+
+				if (player.getFoodStats().needFood() && PlayerTimers.canFeed(player))
 				{
 					player.getFoodStats().addStats(2, 10);
-					this.removeEmc(stack, 64);
-					this.increaseTickCounter(stack);
-				}
-				else
-				{
-					this.increaseTickCounter(stack);
+					removeEmc(stack, 64);
 				}
 			}
-		}
-		else if (this.getTickCount(stack) != 0)
-		{
-			this.setTickCounter(stack, (byte) 0);
 		}
 	}
 	
@@ -62,7 +56,7 @@ public class BodyStone extends RingToggle implements IBauble
 	{
 		if (stack.getItemDamage() == 0)
 		{
-			if (this.getEmc(stack) < 64 && !this.consumeFuel(player, stack, 64, false))
+			if (getEmc(stack) < 64 && !consumeFuel(player, stack, 64, false))
 			{
 				//NOOP (used to be sounds)
 			}
@@ -78,36 +72,36 @@ public class BodyStone extends RingToggle implements IBauble
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public baubles.api.BaubleType getBaubleType(ItemStack itemstack)
 	{
 		return BaubleType.AMULET;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onWornTick(ItemStack stack, EntityLivingBase player) 
 	{
 		this.onUpdate(stack, player.worldObj, player, 0, false);
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onEquipped(ItemStack itemstack, EntityLivingBase player) {}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;

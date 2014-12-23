@@ -6,7 +6,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moze_intel.projecte.api.IProjectileShooter;
-import moze_intel.projecte.events.PlayerChecksEvent;
+import moze_intel.projecte.handlers.PlayerChecks;
 import moze_intel.projecte.gameObjs.entity.EntityLavaProjectile;
 import moze_intel.projecte.utils.Constants;
 import moze_intel.projecte.utils.KeyBinds;
@@ -36,34 +36,34 @@ public class VolcaniteAmulet extends ItemPE implements IProjectileShooter, IBaub
 		this.setContainerItem(this);
 	}
 
-    @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float f1, float f2, float f3)
-    {
-        if (!world.isRemote)
-        {
-            TileEntity tile = world.getTileEntity(x, y, z);
+	@Override
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float f1, float f2, float f3)
+	{
+		if (!world.isRemote)
+		{
+			TileEntity tile = world.getTileEntity(x, y, z);
 
-            if (tile instanceof IFluidHandler)
-            {
-                IFluidHandler tank = (IFluidHandler) tile;
+			if (tile instanceof IFluidHandler)
+			{
+				IFluidHandler tank = (IFluidHandler) tile;
 
-                if (Utils.canFillTank(tank, FluidRegistry.LAVA, sideHit))
-                {
-                    int consumed = (int) Utils.consumePlayerFuel(player, 32);
+				if (Utils.canFillTank(tank, FluidRegistry.LAVA, sideHit))
+				{
+					int consumed = (int) Utils.consumePlayerFuel(player, 32);
 
-                    if (consumed != -1)
-                    {
-                        Utils.fillTank(tank, FluidRegistry.LAVA, sideHit, 1000 * (consumed / 32));
-                        return true;
-                    }
-                }
-            }
-        }
+					if (consumed != -1)
+					{
+						Utils.fillTank(tank, FluidRegistry.LAVA, sideHit, 1000 * (consumed / 32));
+						return true;
+					}
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
+	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean par5)
 	{
 		if (invSlot > 8 || !(entity instanceof EntityPlayer)) return;
@@ -96,10 +96,14 @@ public class VolcaniteAmulet extends ItemPE implements IProjectileShooter, IBaub
 			}
 		}
 		
-		if (!world.isRemote && !player.isImmuneToFire())
+		if (!world.isRemote)
 		{
-			Utils.setPlayerFireImmunity(player, true);
-			PlayerChecksEvent.addPlayerFireChecks((EntityPlayerMP) player);
+			if (!player.isImmuneToFire())
+			{
+				Utils.setPlayerFireImmunity(player, true);
+			}
+
+			PlayerChecks.addPlayerFireChecks((EntityPlayerMP) player);
 		}
 	}
 	
@@ -112,44 +116,44 @@ public class VolcaniteAmulet extends ItemPE implements IProjectileShooter, IBaub
 	@Override
 	public boolean shootProjectile(EntityPlayer player, ItemStack stack) 
 	{
-        if (Utils.consumePlayerFuel(player, 32) != -1)
-        {
-            player.worldObj.spawnEntityInWorld(new EntityLavaProjectile(player.worldObj, player));
-            return true;
-        }
+		if (Utils.consumePlayerFuel(player, 32) != -1)
+		{
+			player.worldObj.spawnEntityInWorld(new EntityLavaProjectile(player.worldObj, player));
+			return true;
+		}
 
-        return false;
+		return false;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		this.itemIcon = register.registerIcon(this.getTexture("rings", "volcanite_amulet"));
 	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
-    {
-        if (KeyBinds.getExtraFuncKeyCode() >= 0 && KeyBinds.getExtraFuncKeyCode() < Keyboard.getKeyCount())
-        {
-            list.add("Press " + Keyboard.getKeyName(KeyBinds.getProjectileKeyCode()) + " to fire a lava projectile");
-        }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	{
+		if (KeyBinds.getExtraFuncKeyCode() >= 0 && KeyBinds.getExtraFuncKeyCode() < Keyboard.getKeyCount())
+		{
+			list.add("Press " + Keyboard.getKeyName(KeyBinds.getProjectileKeyCode()) + " to fire a lava projectile");
+		}
 
-        list.add("Right-click to fill tanks.");
-        list.add("All operations cost 32 EMC!");
-    }
+		list.add("Right-click to fill tanks.");
+		list.add("All operations cost 32 EMC!");
+	}
 	
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public baubles.api.BaubleType getBaubleType(ItemStack itemstack)
 	{
 		return BaubleType.AMULET;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onWornTick(ItemStack stack, EntityLivingBase ent) 
 	{
 		if (!(ent instanceof EntityPlayer)) 
@@ -193,11 +197,11 @@ public class VolcaniteAmulet extends ItemPE implements IProjectileShooter, IBaub
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onEquipped(ItemStack itemstack, EntityLivingBase player) {}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public void onUnequipped(ItemStack itemstack, EntityLivingBase player) 
 	{
 		if (player instanceof EntityPlayer && !player.worldObj.isRemote)
@@ -207,14 +211,14 @@ public class VolcaniteAmulet extends ItemPE implements IProjectileShooter, IBaub
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;
 	}
 
 	@Override
-    @Optional.Method(modid = "Baubles")
+	@Optional.Method(modid = "Baubles")
 	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) 
 	{
 		return true;
