@@ -42,7 +42,7 @@ public class MatterFurnace extends BlockDirection implements ITileEntityProvider
 		isActive = active;
 		isHighTier = isRM;
 		textureName = isHighTier ? "rm" : "dm";
-		this.setBlockName("pe_" + textureName + "_furnace");
+		this.setBlockName("" + textureName + "_furnace");
 		
 		if (isActive) 
 		{
